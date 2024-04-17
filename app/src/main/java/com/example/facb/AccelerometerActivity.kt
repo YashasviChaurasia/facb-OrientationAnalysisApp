@@ -18,16 +18,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.room.Room
 import com.example.facb.ui.theme.FacbTheme
+import kotlinx.coroutines.runBlocking
+
+
+
 
 class AccelerometerActivity : ComponentActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var rotationVectorSensor: Sensor? = null
     private var rotationMatrix: FloatArray = FloatArray(9)
     private var orientationAngles: FloatArray = FloatArray(3)
-
+    companion object {
+        lateinit var database: AppDatabase
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        database = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "my_database")
+            .build()
         setContent {
             FacbTheme {
                 Surface(
@@ -72,11 +81,15 @@ class AccelerometerActivity : ComponentActivity(), SensorEventListener {
             SensorManager.getOrientation(rotationMatrix, orientationAngles)
             // Convert angles from radians to degrees
             orientationAngles = orientationAngles.map { it * 180 / Math.PI.toFloat() }.toFloatArray()
-            updateUI()
+
+            // Ensure that pitch value is not null
+            val pitch = orientationAngles.getOrElse(1) { 0f }
+
+            updateUI(orientationAngles[0], pitch, orientationAngles[2])
         }
     }
 
-    private fun updateUI() {
+    private fun updateUI(roll: Float, pitch: Float, yaw: Float) {
         // Re-compose the activity
         setContent {
             FacbTheme {
@@ -84,19 +97,26 @@ class AccelerometerActivity : ComponentActivity(), SensorEventListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AccelerometerScreen(
-                        roll = orientationAngles[0],
-                        pitch = orientationAngles[1],
-                        yaw = orientationAngles[2]
-                    )
+                    AccelerometerScreen(roll, pitch, yaw)
                 }
             }
         }
     }
+
 }
 
 @Composable
 fun AccelerometerScreen(roll: Float, pitch: Float, yaw: Float) {
+    val orientationDataDao = AccelerometerActivity.database.orientationDataDao()
+
+    fun saveOrientationData(roll: Float, pitch: Float, yaw: Float, timestamp: Long) {
+        val orientationData = OrientationData(roll = roll, pitch = pitch, yaw = yaw, timestamp = timestamp)
+        runBlocking {
+            orientationDataDao.insertData(orientationData)
+        }
+    }
+
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -118,6 +138,9 @@ fun AccelerometerScreen(roll: Float, pitch: Float, yaw: Float) {
                 text = "Yaw: ${String.format("%.2f", yaw)}",
                 modifier = Modifier.padding(16.dp)
             )
+            val currentTimeMillis = System.currentTimeMillis()
+            saveOrientationData(roll, pitch, yaw, currentTimeMillis)
+
         }
     }
 }
