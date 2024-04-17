@@ -1,3 +1,5 @@
+import java.util.regex.Pattern.compile
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -49,8 +51,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-}
 
+
+}
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -94,6 +97,11 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.2")
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    implementation("com.patrykandpatrick.vico:compose:2.0.0-alpha.15")
+
+
 
 
 }

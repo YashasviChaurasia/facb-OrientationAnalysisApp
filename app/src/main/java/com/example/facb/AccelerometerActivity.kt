@@ -1,6 +1,7 @@
 package com.example.facb
 
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -9,6 +10,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -140,6 +142,18 @@ fun AccelerometerScreen(roll: Float, pitch: Float, yaw: Float) {
             )
             val currentTimeMillis = System.currentTimeMillis()
             saveOrientationData(roll, pitch, yaw, currentTimeMillis)
+
+            val context = LocalContext.current
+
+            Button(
+                onClick = {
+                    val intent = Intent(context, GraphActivity::class.java)
+                    context.startActivity(intent)
+                },
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(text = "View Graph")
+            }
 
         }
     }
