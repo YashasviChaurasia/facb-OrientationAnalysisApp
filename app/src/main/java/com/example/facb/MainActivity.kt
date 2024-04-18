@@ -12,7 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.facb.ui.theme.FacbTheme
 
 object GlobalVariables {
@@ -53,12 +59,33 @@ fun FirstScreen(onNavigateToAccelerometerActivity: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Button to navigate to AccelerometerActivity
+
+            Text(
+                text = "Accelerometer \nbased \nRelative Orientation",
+                fontSize = 45.sp,
+                style = androidx.compose.ui.text.TextStyle(
+                    fontWeight = FontWeight.Black,
+                    fontStyle = FontStyle.Italic,
+                    color = Color.Black
+                ),
+                textAlign = TextAlign.Start
+            )
+            Spacer(modifier = Modifier.height(16.dp).padding(16.dp))
+            Text(
+                text = "Frenetic Accelerometer & Sensor Control Beacon",
+                fontSize = 16.sp,
+                style = androidx.compose.ui.text.TextStyle(
+                    fontWeight = FontWeight.Light,
+                    fontStyle = FontStyle.Normal,
+                    color = Color.Gray
+                ),
+                textAlign = TextAlign.Center
+            )
             Button(
                 onClick = {onNavigateToAccelerometerActivity() },
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text(text = "Next Activity")
+                Text(text = "Intiate Sensor Data Collection")
 
             }
 
