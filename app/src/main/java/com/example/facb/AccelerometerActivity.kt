@@ -18,16 +18,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+
 import com.example.facb.ui.theme.FacbTheme
 import kotlinx.coroutines.runBlocking
 
 
-
-
-class AccelerometerActivity : ComponentActivity(), SensorEventListener {
+class AccelerometerActivity: ComponentActivity(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var rotationVectorSensor: Sensor? = null
     private var rotationMatrix: FloatArray = FloatArray(9)
@@ -37,6 +36,8 @@ class AccelerometerActivity : ComponentActivity(), SensorEventListener {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         database = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "my_database")
             .build()
         setContent {
@@ -60,10 +61,11 @@ class AccelerometerActivity : ComponentActivity(), SensorEventListener {
     override fun onResume() {
         super.onResume()
         rotationVectorSensor?.also { sensor ->
+
             sensorManager.registerListener(
                 this,
                 sensor,
-                SensorManager.SENSOR_DELAY_NORMAL
+                SensorManager.SENSOR_DELAY_FASTEST
             )
         }
     }

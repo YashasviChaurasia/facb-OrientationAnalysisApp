@@ -12,11 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.facb.ui.theme.FacbTheme
 
+object GlobalVariables {
+    var vflag = mutableIntStateOf(0)
+}
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,7 +36,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun navigateToAccelerometerActivity() {
+    private fun navigateToAccelerometerActivity( ) {
         // Start AccelerometerActivity
         startActivity(Intent(this, AccelerometerActivity::class.java))
     }
@@ -52,11 +55,13 @@ fun FirstScreen(onNavigateToAccelerometerActivity: () -> Unit) {
         ) {
             // Button to navigate to AccelerometerActivity
             Button(
-                onClick = onNavigateToAccelerometerActivity,
+                onClick = {onNavigateToAccelerometerActivity() },
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(text = "Next Activity")
+
             }
+
         }
     }
 }
