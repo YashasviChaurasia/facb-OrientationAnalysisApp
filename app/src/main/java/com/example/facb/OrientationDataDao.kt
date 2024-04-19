@@ -11,4 +11,7 @@ interface OrientationDataDao {
 
     @Query("SELECT * FROM orientation_data ORDER BY timestamp DESC LIMIT 50")
     fun getAllOrientationData(): List<OrientationData>
+
+    @Query("SELECT * FROM orientation_data ORDER BY timestamp")
+    fun getAllOrientationDatafull(): List<OrientationData>
 }

@@ -2,14 +2,23 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
+import os
 
-df = pd.read_csv("my_database/orientation_data-sm-fastest.csv", sep=';')
-# df = pd.read_csv("my_database/orientation_data-sm-normal.csv", sep=';')
-# df = pd.read_csv("my_database/orientation_data-sm-Game.csv", sep=';')
+# Find the first CSV file in the my_database folder
+database_folder = "orientation_database"
+csv_files = [file for file in os.listdir(database_folder) if file.endswith(".csv")]
 
+if len(csv_files) == 0:
+    print("No CSV files found in the database folder.")
+    exit()
 
+csv_file_path = os.path.join(database_folder, csv_files[0])
+
+df = pd.read_csv(csv_file_path, sep=';')
+
+df['id'] = np.arange(1, len(df) + 1)
 df.set_index('id', inplace=True)
-window_size = 10  # prediction elements, how may should we required 10,adjust size here
+window_size = 10  # prediction elements, how many should we require, adjust size here
 
 def generate_data(data, window_size):
     X = []
@@ -18,7 +27,6 @@ def generate_data(data, window_size):
         X.append(data[i:i+window_size])
         y.append(data[i+window_size])
     return np.array(X), np.array(y)
-
 
 def generate_predictions(model, last_window):
     next_pred = model.predict(last_window).flatten()
@@ -34,7 +42,6 @@ def plot_predictions(df, predicted_values, label):
     plt.legend()
     plt.title(f'Actual vs Predicted {label.capitalize()}')
     plt.show()
-
 
 predicted_roll_values = []
 predicted_pitch_values = []
